@@ -1,0 +1,48 @@
+root@MASTER:~# wget https://apt.puppetlabs.com/puppet-release-bionic.deb
+root@MASTER:~# sudo dpkg -i puppet-release-bionic.deb
+dpkg: error: dpkg frontend is locked by another process
+sudo dpkg --configure -a
+
+root@MASTER:~# sudo apt-get install puppetmaster
+root@MASTER:~# sudo apt policy puppetmaster
+root@MASTER:~# sudo systemctl status puppet-master.service =======>> showsactive
+root@MASTER:~# vim /etc/default/puppet-master
+JAVA_ARGS="-Xms512m -Xmx512m"
+root@MASTER:~# sudo systemctl restart puppet-master.service
+root@MASTER:~# sudo ufw allow 8140/tcp
+root@MASTER:~$ sudo nano /etc/hosts
+PUBLIC IP ADDRESS MASTER ********* PUPPET
+root@MASTER:~$ sudo mkdir -p /etc/puppet/code/environments/production/manifests/
+root@MASTER:~$ sudo nano /etc/puppet/code/environments/production/manifests/site.pp
+
+
+file {'/tmp/it_works.txt':                        # resource type file and filename
+  ensure  => present,                             # make sure it exists
+  mode    => '0644',                              # file permissions
+  content => "It works on ${ipaddress_eth0}!\n",  # Print the eth0 IP fact
+}
+root@MASTER:~# sudo systemctl restart puppet-master
+root@MASTER:~# sudo systemctl enable puppet-master
+
+AGENT: 
+=====
+
+
+root@SLAVE:~# wget https://apt.puppetlabs.com/puppet-release-bionic.deb
+root@SLAVE:~# sudo dpkg -i puppet-release-bionic.deb
+root@SLAVE:~# sudo apt-get install puppet
+root@SLAVE:~# sudo nano /etc/hosts
+PUBLIC IP ADDRESS MASTER ********** PUPPET 
+root@SLAVE:~# sudo sysytemctl start puppet
+root@SLAVE:~# sudo systemctl enable puppet
+root@SLAVE:~# sudo puppet agent --test
+Info: Using configured environment 'production'
+Info: Retrieving pluginfacts
+Info: Retrieving plugin
+Info: Retrieving locales
+Info: Caching catalog for slave.us-west-2.compute.internal
+Info: Applying configuration version '1578208621'
+Notice: Applied catalog in 0.02 seconds
+root@SLAVE:~# cat /tmp/it_works.txt
+It works on 172.31.23.138!
+
