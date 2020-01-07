@@ -1,0 +1,19 @@
+[root@MASTER ~]# iptables -F
+[root@MASTER ~]# systemctl stop firewalld
+[root@MASTER ~]#yum install iptables-services
+[root@MASTER ~]#systemctl enable iptables
+[root@MASTER ~]#service iptables save
+
+[root@MASTER ~]# service iptables save
+[root@MASTER ~]# rpm -ivh https://yum.puppet.com/puppetlabs-release-el-6.noarch.rpm
+
+[root@MASTER ~]# yum update
+[root@MASTER ~]# yum install puppet-server
+[root@MASTER ~]# ifconfig
+172.31.24.82
+[root@MASTER ~]# vi /etc/hosts
+172.31.24.82 puppet.sri
+
+
+
+172.31.20.78
